@@ -7,13 +7,15 @@ var axios = require('../server_mongo/axios');
 // 매 분마다 실행되는 스케줄링 작업
 /*cron.schedule('* * * * *', () => {
     console.log('매 분마다 실행됩니다.');
-});*/
+});
 //console.log('매 시간의 30분에 실행됩니다.');
 // 매 시간의 30분에 실행되는 스케줄링 작업
-/*cron.schedule('* * * * *', () => {
-    console.log('오전 8시에 실행됩니다.');
-    db.WorkPushSends('IN','0800' );
-});*/
+
+ */
+cron.schedule('* * * * *', () => {
+    console.log('오전 5시에 실행됩니다.');
+    db.WorkPushSends('IN','0500' );
+});
 
 
 

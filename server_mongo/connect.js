@@ -1,7 +1,7 @@
 // 1. mongoose 모듈 가져오기
 var mongoose = require('mongoose');
 // 2. testDB 세팅
-mongoose.connect('mongodb://localhost:27017/workerDB');
+mongoose.connect('mongodb://10.245.18.36:27017/workerDB');
 // 3. 연결된 testDB 사용
 var db = mongoose.connection;
 // 4. 연결 실패
@@ -335,12 +335,11 @@ module.exports = {
 
 
             workData = new Swt({
-                empNo: empNo,
+                empNo: empNo.trimEnd(),
                 wrkInOutDate: wrkInOutDate,
                 wrkInOutTime: wrkInOutTime,
                 latitudeNum: latitudeNum,
-                longitudeNum: longitudeNum
-                ,
+                longitudeNum: longitudeNum,
                 telno: tel,
                 createBy: createBy,
                 wrkInOutStatus: wrkInOutStatus,
@@ -863,7 +862,8 @@ module.exports = {
 
                         {
                             $project: {
-                                'b.token': 1
+                                'b.token': 1,
+                                'b.id': 1
                             }
                         }
                     ])
@@ -872,11 +872,36 @@ module.exports = {
                                 console.log(err);
                             } else {
                                 console.log(results);
+                                const Swt = mongoose.model('workonoffs', swt);
 
                                 for (let i = 0; i < results.length; i++) {
                                     const item = results[i];
                                     console.log(item.b.token);
-                                    fcm.sendPushNotification(item.b.token,title,body); //푸시 전송
+
+                                    console.log("==============");
+                                    console.log("today_date:"+today_date);
+                                    console.log("today_date:"+item.b.id);
+                                    console.log("today_date:"+inout);
+                                    console.log("==============");
+
+                                    Swt.findOne({wrkInOutDate:today_date, empNo:item.b.id.trimEnd(),wrkInOutStatus: inout},{_id:0,id:1},function(error, swts){
+                                        if (err) {
+                                            console.log(err);
+                                        }else{
+                                            if(swts == null){
+                                                console.log("****************");
+                                                console.log(swts);
+                                                console.log("****************");
+                                                fcm.sendPushNotification(item.b.token,title,body); //푸시 전송
+                                            }else{
+                                                console.log('==이미체크==');
+                                                console.log(swts);
+                                            }
+
+                                        }
+
+                                    });
+
                                 }
 
 

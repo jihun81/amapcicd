@@ -14,6 +14,11 @@ module.exports = {
                 title: title,
                 body: body
             },
+            android: {
+                notification: {
+                    channelId: 'channel_01', // 채널 ID 설정
+                },
+            },
             token: deviceToken
         };
 
